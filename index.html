@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Agent Allotment Calculator</title>
+</head>
+<body>
+  <h2>Agent Allotment Calculator</h2>
+  <label>Net Addition (Prev FY): <input type="number" id="na_prev"></label><br>
+  <label>Recruited (Prev FY): <input type="number" id="r_prev"></label><br>
+  <label>Recruited & Activised (Current FY): <input type="number" id="ra_curr"></label><br>
+  <label>Condition Type:
+    <select id="cond_type">
+      <option value="1and2">1 and/or 2</option>
+      <option value="3only">3 only</option>
+    </select>
+  </label><br>
+  <label>Active Agents (Prev FY): <input type="number" id="active_prev"></label><br><br>
+  <button onclick="calculate()">Calculate Allotment</button>
+
+  <h3>Result: <span id="result">-</span> agents</h3>
+
+  <script>
+    function calculate() {
+      let na = +document.getElementById('na_prev').value;
+      let rp = +document.getElementById('r_prev').value;
+      let rc = +document.getElementById('ra_curr').value;
+      let ct = document.getElementById('cond_type').value;
+      let ap = +document.getElementById('active_prev').value;
+
+      let A = 0, B = 0, C = 0;
+
+      if (ct === "1and2") {
+        A = Math.min(Math.max(na, rp), 5);
+        B = rc >= A ? Math.min(rc, 5) : 0;
+      } else if (ct === "3only") {
+        A = 5;
+        B = rc > 5 ? Math.min(rc - 5, 5) : 0;
+      }
+
+      let AB = A + B;
+      if (ap >= 50 && rc >= 5) {
+        C = Math.min(rc - AB, 5);
+      }
+
+      let total = Math.min(A + B + C, 15);
+      document.getElementById('result').innerText = total;
+    }
+  </script>
+</body>
+</html>
